@@ -155,6 +155,8 @@ enum HealthDataType: String, CaseIterable {
     case calories
     case heartRate
     case weight
+    case height
+    case bodyFat
 
     func sampleType() throws -> HKQuantityType {
         let identifier: HKQuantityTypeIdentifier
@@ -169,6 +171,10 @@ enum HealthDataType: String, CaseIterable {
             identifier = .heartRate
         case .weight:
             identifier = .bodyMass
+        case .height:
+            identifier = .height
+        case .bodyFat:
+            identifier = .bodyFatPercentage
         }
 
         guard let type = HKObjectType.quantityType(forIdentifier: identifier) else {
@@ -189,6 +195,10 @@ enum HealthDataType: String, CaseIterable {
             return HKUnit.count().unitDivided(by: HKUnit.minute())
         case .weight:
             return HKUnit.gramUnit(with: .kilo)
+        case .height:
+            return HKUnit.meter()
+        case .bodyFat:
+            return HKUnit.percent()
         }
     }
 
@@ -204,6 +214,10 @@ enum HealthDataType: String, CaseIterable {
             return "bpm"
         case .weight:
             return "kilogram"
+        case .height:
+            return "meter"
+        case .bodyFat:
+            return "percent"
         }
     }
 
@@ -513,6 +527,8 @@ final class Health {
             return HKUnit.count().unitDivided(by: HKUnit.minute())
         case "kilogram":
             return HKUnit.gramUnit(with: .kilo)
+        case "percent":
+            return HKUnit.percent()
         default:
             return dataType.defaultUnit
         }
